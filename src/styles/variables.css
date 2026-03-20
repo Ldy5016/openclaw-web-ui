@@ -1,0 +1,230 @@
+/* CSS Variables - 主题系统 */
+:root {
+  /* 默认主题 - DeepSeek浅色风格 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9f9;
+  --bg-tertiary: #f2f2f2;
+  --text-primary: #333333;
+  --text-secondary: #999999;
+  --text-inverse: #ffffff;
+  --accent: #5a5aec;
+  --accent-hover: #4a4adc;
+  --border: #e5e5e5;
+  --shadow: rgba(0, 0, 0, 0.08);
+  
+  /* 消息样式 */
+  --message-user-bg: #5a5aec;
+  --message-user-text: #ffffff;
+  --message-ai-bg: #f5f5f5;
+  --message-ai-text: #333333;
+  
+  /* 输入框 */
+  --input-bg: #ffffff;
+  --input-border: #e5e5e5;
+  --input-focus-border: #5a5aec;
+  
+  /* 按钮 */
+  --btn-primary-bg: #5a5aec;
+  --btn-primary-text: #ffffff;
+  
+  /* 滚动条 */
+  --scrollbar-thumb: #cccccc;
+  --scrollbar-track: #f5f5f5;
+}
+
+/* 暗夜主题 */
+[data-theme="dark"] {
+  --bg-primary: #171717;
+  --bg-secondary: #1f1f1f;
+  --bg-tertiary: #2b2b2b;
+  --text-primary: #ffffff;
+  --text-secondary: #8b8b8b;
+  --text-inverse: #171717;
+  --accent: #00d9ff;
+  --accent-hover: #00b8d9;
+  --border: #3a3a3a;
+  --shadow: rgba(0, 0, 0, 0.3);
+  
+  /* 消息样式 */
+  --message-user-bg: #00d9ff;
+  --message-user-text: #171717;
+  --message-ai-bg: #2b2b2b;
+  --message-ai-text: #ffffff;
+  
+  /* 输入框 */
+  --input-bg: #2b2b2b;
+  --input-border: #3a3a3a;
+  --input-focus-border: #00d9ff;
+  
+  /* 按钮 */
+  --btn-primary-bg: #00d9ff;
+  --btn-primary-text: #171717;
+  
+  /* 滚动条 */
+  --scrollbar-thumb: #4a4a4a;
+  --scrollbar-track: #1f1f1f;
+}
+
+/* 粉色主题 */
+[data-theme="pink"] {
+  --bg-primary: #fff0f5;
+  --bg-secondary: #ffe4e9;
+  --bg-tertiary: #ffd6e0;
+  --text-primary: #4a4a4a;
+  --text-secondary: #7a7a7a;
+  --accent: #ff69b4;
+  --accent-hover: #ff1493;
+  --border: #ffb6c1;
+  --shadow: rgba(255, 105, 180, 0.15);
+  
+  /* 消息样式 */
+  --message-user-bg: #ff69b4;
+  --message-user-text: #ffffff;
+  --message-ai-bg: #ffe4e9;
+  --message-ai-text: #4a4a4a;
+  
+  /* 输入框 */
+  --input-bg: #ffffff;
+  --input-border: #ffb6c1;
+  --input-focus-border: #ff69b4;
+  
+  /* 按钮 */
+  --btn-primary-bg: #ff69b4;
+  --btn-primary-text: #ffffff;
+  
+  /* 滚动条 */
+  --scrollbar-thumb: #ffb6c1;
+  --scrollbar-track: #fff0f5;
+}
+
+/* 赛博科技主题 - 浅黑色背景 + 霓虹色 */
+[data-theme="cyber"] {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #252542;
+  --bg-tertiary: #32325a;
+  --text-primary: #e0e0ff;
+  --text-secondary: #9090b0;
+  --text-inverse: #1a1a2e;
+  --accent: #00f5ff;
+  --accent-hover: #00c8e0;
+  --border: #4a4a7a;
+  --shadow: rgba(0, 245, 255, 0.2);
+  
+  /* 消息样式 */
+  --message-user-bg: linear-gradient(135deg, #ff00ff 0%, #7b00ff 100%);
+  --message-user-text: #ffffff;
+  --message-ai-bg: #252542;
+  --message-ai-text: #e0e0ff;
+  
+  /* 输入框 */
+  --input-bg: #252542;
+  --input-border: #4a4a7a;
+  --input-focus-border: #00f5ff;
+  
+  /* 按钮 */
+  --btn-primary-bg: linear-gradient(135deg, #00f5ff 0%, #7b00ff 100%);
+  --btn-primary-text: #ffffff;
+  
+  /* 滚动条 */
+  --scrollbar-thumb: #00f5ff;
+  --scrollbar-track: #252542;
+  
+  /* 赛博特有 */
+  --glow-color: #00f5ff;
+  --bubble-radius: 0px;
+  --bubble-border: 2px solid #00f5ff;
+  
+  /* 背景特效 - 青色网格 */
+  --bg-effect: 
+    linear-gradient(rgba(0, 245, 255, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.3) 1px, transparent 1px);
+  --bg-size: 25px 25px;
+}
+
+/* 梦幻海洋主题 - 背景加深 + 对话框半透明 */
+[data-theme="ocean"] {
+  --bg-primary: linear-gradient(135deg, #8ab4d8 0%, #c4b4d0 50%, #e8b8c8 100%);
+  --bg-secondary: rgba(255, 255, 255, 0.35);
+  --bg-tertiary: rgba(139, 92, 246, 0.25);
+  --text-primary: #1e3a5f;
+  --text-secondary: #4a5568;
+  --text-inverse: #ffffff;
+  --accent: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --border: rgba(139, 92, 246, 0.4);
+  --shadow: rgba(139, 92, 246, 0.3);
+  
+  /* 消息样式 - 半透明对话框 */
+  --message-user-bg: linear-gradient(135deg, rgba(6, 182, 212, 0.7) 0%, rgba(59, 130, 246, 0.7) 100%);
+  --message-user-text: #ffffff;
+  --message-ai-bg: rgba(139, 92, 246, 0.35);
+  --message-ai-text: #1e3a5f;
+  
+  /* 输入框 */
+  --input-bg: rgba(255, 255, 255, 0.6);
+  --input-border: rgba(139, 92, 246, 0.4);
+  --input-focus-border: #8b5cf6;
+  
+  /* 按钮 */
+  --btn-primary-bg: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+  --btn-primary-text: #ffffff;
+  
+  /* 滚动条 */
+  --scrollbar-thumb: #8b5cf6;
+  --scrollbar-track: rgba(139, 92, 246, 0.15);
+  
+  /* 海洋特有 */
+  --glow-color: #8b5cf6;
+  --bubble-radius: 20px;
+  --bubble-border: none;
+  
+  /* 背景特效 - 水光纹路 */
+  --bg-effect: 
+    radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 40%, rgba(236, 72, 153, 0.2) 0%, transparent 40%);
+  --bg-size: 100% 100%;
+}
+
+/* 全局样式 - 确保页面高度100% */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
