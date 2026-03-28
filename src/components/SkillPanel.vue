@@ -183,11 +183,18 @@ const loadSkills = async (force = false) => {
   
   loading.value = true
   
-  // 尝试使用 Electron API 获取真实技能列表
-  if (window.electronAPI) {
+  // 尝试使用 Electron API 获取真实技能列表（带超时保护）
+  if (window.electronAPI?.executeCommand) {
     try {
-      const result = await window.electronAPI.executeCommand('openclaw skills list')
-      if (result.success && result.stdout) {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('timeout')), 30000)
+      )
+      const result = await Promise.race([
+        window.electronAPI.executeCommand('openclaw skills list'),
+        timeoutPromise
+      ])
+      
+      if (result?.success && result?.stdout) {
         // 解析 CLI 输出
         const lines = result.stdout.split('\n').filter(l => l.trim())
         const parsedSkills = []
@@ -218,7 +225,7 @@ const loadSkills = async (force = false) => {
         }
       }
     } catch (e) {
-      console.log('Electron API 不可用，使用本地存储')
+      console.log('Electron API 不可用，使用本地存储:', e.message)
     }
   }
   
@@ -244,48 +251,50 @@ const loadSkills = async (force = false) => {
 
 // 技能配置映射
 const skillConfig = {
-  'stock-analyst-skill': { name: '股票分析', icon: '📈' },
-  'stock-analyst': { name: '股票分析', icon: '📈' },
-  'weather': { name: '天气查询', icon: '🌤️' },
-  'find-skills': { name: '技能查找', icon: '🔍' },
-  'feishu-doc': { name: '飞书文档', icon: '📝' },
-  'feishu-drive': { name: '飞书云盘', icon: '☁️' },
-  'feishu-perm': { name: '飞书权限', icon: '🔐' },
-  'feishu-wiki': { name: '飞书百科', icon: '📚' },
-  'clawhub': { name: 'ClawHub', icon: '🛠️' },
-  'healthcheck': { name: '健康检查', icon: '🛡️' },
-  'skill-creator': { name: '技能创建', icon: '✨' },
-  'skill-vetter': { name: '技能检测', icon: '🔍' },
-  'feishu-app': { name: '飞书应用', icon: '🐦' },
-  'feishu-bitable': { name: '飞书多维表格', icon: '📊' },
-  'proactive-agent-lite': { name: '主动代理', icon: '🧠' },
-  'self-improving-agent': { name: '自我改进', icon: '🔄' }
+  'stock-analyst-skill': { displayName: '股票分析', icon: '📈' },
+  'stock-analyst': { displayName: '股票分析', icon: '📈' },
+  'weather': { displayName: '天气查询', icon: '🌤️' },
+  'find-skills': { displayName: '技能查找', icon: '🔍' },
+  'feishu-doc': { displayName: '飞书文档', icon: '📝' },
+  'feishu-drive': { displayName: '飞书云盘', icon: '☁️' },
+  'feishu-perm': { displayName: '飞书权限', icon: '🔐' },
+  'feishu-wiki': { displayName: '飞书百科', icon: '📚' },
+  'clawhub': { displayName: 'ClawHub', icon: '🛠️' },
+  'healthcheck': { displayName: '健康检查', icon: '🛡️' },
+  'skill-creator': { displayName: '技能创建', icon: '✨' },
+  'skill-vetter': { displayName: '技能检测', icon: '🔍' },
+  'feishu-app': { displayName: '飞书应用', icon: '🐦' },
+  'feishu-bitable': { displayName: '飞书多维表格', icon: '📊' },
+  'proactive-agent-lite': { displayName: '主动代理', icon: '🧠' },
+  'self-improving-agent': { displayName: '自我改进', icon: '🔄' }
 }
 
 // 获取技能配置
 const getSkillConfig = (location) => {
-  if (!location) return { name: null, icon: '📦' }
+  if (!location) return { displayName: null, icon: '📦' }
   const lower = location.toLowerCase()
   for (const key of Object.keys(skillConfig)) {
     if (lower.includes(key.toLowerCase())) {
       return skillConfig[key]
     }
   }
-  return { name: null, icon: '📦' }
+  return { displayName: null, icon: '📦' }
 }
 
 // 处理技能数据，添加中文名和图标
 const processSkillData = (skillList) => {
   return skillList.map(skill => {
-    const config = getSkillConfig(skill.location || skill.name)
+    // 优先用 location 作为原名（因为location一定是英文），其次才是name
+    const originalName = skill.location || skill.name
+    const config = getSkillConfig(originalName)
     return {
       ...skill,
-      // 如果没有中文名就用原名
-      displayName: config.name || skill.name,
+      // 优先用传入的中文名，其次用配置的中文名，最后用原名
+      displayName: skill.displayName || config.displayName || originalName,
       // 使用配置的图标或默认
       icon: config.icon !== '📦' ? config.icon : (skill.icon || '📦'),
-      // 保存原名
-      originalName: skill.name
+      // 保存原名（一定是英文）
+      originalName: originalName
     }
   })
 }
@@ -293,17 +302,17 @@ const processSkillData = (skillList) => {
 // 加载默认技能
 const loadDefaultSkills = () => {
   const defaultSkills = [
-    { name: '股票分析', description: '基于多维度分析框架输出投资建议', icon: '📈', location: 'stock-analyst-skill' },
-    { name: '天气查询', description: '获取当前天气和天气预报', icon: '🌤️', location: 'weather' },
-    { name: '技能查找', description: '使用 ClawHub CLI 搜索、安装和管理技能', icon: '🔍', location: 'find-skills' },
-    { name: '飞书文档', description: '飞书文档云空间文件管理', icon: '📝', location: 'feishu-doc' },
-    { name: '飞书云盘', description: '飞书云存储文件操作', icon: '☁️', location: 'feishu-drive' },
-    { name: '飞书权限', description: '飞书文档和文件权限管理', icon: '🔐', location: 'feishu-perm' },
-    { name: '飞书百科', description: '飞书知识库节点操作', icon: '📚', location: 'feishu-wiki' },
-    { name: 'ClawHub', description: '搜索、安装、更新技能', icon: '🛠️', location: 'clawhub' },
-    { name: '健康检查', description: '主机安全加固和风险配置', icon: '🛡️', location: 'healthcheck' },
-    { name: '技能创建', description: '创建、编辑技能', icon: '✨', location: 'skill-creator' },
-    { name: 'Skill Vetter', description: '技能安全检测工具', icon: '🔍', location: 'skill-vetter' }
+    { name: 'stock-analyst-skill', displayName: '股票分析', description: '基于多维度分析框架输出投资建议', icon: '📈', location: 'stock-analyst-skill' },
+    { name: 'weather', displayName: '天气查询', description: '获取当前天气和天气预报', icon: '🌤️', location: 'weather' },
+    { name: 'find-skills', displayName: '技能查找', description: '使用 ClawHub CLI 搜索、安装和管理技能', icon: '🔍', location: 'find-skills' },
+    { name: 'feishu-doc', displayName: '飞书文档', description: '飞书文档云空间文件管理', icon: '📝', location: 'feishu-doc' },
+    { name: 'feishu-drive', displayName: '飞书云盘', description: '飞书云存储文件操作', icon: '☁️', location: 'feishu-drive' },
+    { name: 'feishu-perm', displayName: '飞书权限', description: '飞书文档和文件权限管理', icon: '🔐', location: 'feishu-perm' },
+    { name: 'feishu-wiki', displayName: '飞书百科', description: '飞书知识库节点操作', icon: '📚', location: 'feishu-wiki' },
+    { name: 'clawhub', displayName: 'ClawHub', description: '搜索、安装、更新技能', icon: '🛠️', location: 'clawhub' },
+    { name: 'healthcheck', displayName: '健康检查', description: '主机安全加固和风险配置', icon: '🛡️', location: 'healthcheck' },
+    { name: 'skill-creator', displayName: '技能创建', description: '创建、编辑技能', icon: '✨', location: 'skill-creator' },
+    { name: 'skill-vetter', displayName: '技能检测', description: '技能安全检测工具', icon: '🔍', location: 'skill-vetter' }
   ]
   skills.value = processSkillData(defaultSkills)
   localStorage.setItem('openclaw-skills', JSON.stringify(skills.value))

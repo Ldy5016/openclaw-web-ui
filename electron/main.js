@@ -14,7 +14,13 @@ if (!app.requestSingleInstanceLock()) {
 // 获取 OpenClaw 版本号
 function getOpenClawVersion() {
   try {
-    // 动态获取 npm 全局安装路径
+    // 优先使用 .npm-global 路径
+    const npmGlobalPath = path.join(process.env.USERPROFILE || '', '.npm-global', 'node_modules', 'openclaw', 'package.json')
+    if (fs.existsSync(npmGlobalPath)) {
+      const pkg = JSON.parse(fs.readFileSync(npmGlobalPath, 'utf8'))
+      return pkg.version || '1.0.0'
+    }
+    // 备用：APPDATA 路径
     const npmPath = process.env.APPDATA || path.join(process.env.USERPROFILE, 'AppData', 'Roaming')
     const packagePath = path.join(npmPath, 'npm', 'node_modules', 'openclaw', 'package.json')
     if (fs.existsSync(packagePath)) {
@@ -24,7 +30,7 @@ function getOpenClawVersion() {
   } catch (e) {
     console.log('获取版本失败:', e)
   }
-  return '1.0.0'
+  return '2026.3.13'
 }
 
 // 获取机器人名称
